@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 DATA = {
     'omlet': {
@@ -28,3 +29,31 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
+
+
+def home(request):
+    return HttpResponse('Hello')
+
+
+def recipe(request, dish):
+    servings = request.GET.get('servings')
+    if servings:
+        try:
+            servings = int(servings)
+        except ValueError:
+            return HttpResponse('Ошибка, введите целое число.')
+    else:
+        servings = 1
+
+    recipe_data = DATA.get(dish)
+    if not recipe_data:
+        context = {
+            'not_found': True
+        }
+    else:
+        recipes = {k: v * servings for k, v in recipe_data.items()}
+        context = {
+            'recipe': recipes
+        }
+
+    return render(request, 'calculator/index.html', context)
