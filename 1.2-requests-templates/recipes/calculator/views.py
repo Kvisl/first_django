@@ -48,7 +48,7 @@ def recipe(request, dish):
     recipe_data = DATA.get(dish)
     if not recipe_data:
         context = {
-            'not_found': True
+            'not_found':  404
         }
     else:
         recipes = {k: v * servings for k, v in recipe_data.items()}
